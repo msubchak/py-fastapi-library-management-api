@@ -23,7 +23,7 @@ def create_author(db: Session, author_data: AuthorCreate):
     return author_db
 
 
-def get_alL_book(db: Session, skip: int = 0, limit: int = 10):
+def get_all_book(db: Session, skip: int = 0, limit: int = 10):
     return db.query(Book).offset(skip).limit(limit).all()
 
 

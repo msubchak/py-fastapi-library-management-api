@@ -45,8 +45,7 @@ def create_author(
     existing_author = db.query(Author).filter(Author.name == author_data.name).first()
     if existing_author:
         raise HTTPException(status_code=400, detail="Author already exists")
-
-    return crud.create_author(db, author_data)
+    return existing_author
 
 
 @app.get("/books/", response_model=list[BookList])
@@ -71,6 +70,6 @@ def create_book(
     return crud.create_book_for_author(db, book_data.author_id, book_data)
 
 
-@app.get("/books/{book_id}", response_model=list[BookList])
+@app.get("/authors/{author_id}/books", response_model=list[BookList])
 def get_book_author(book_id: int, db: Session = Depends(get_db)):
     return crud.get_books_author(db, book_id)
