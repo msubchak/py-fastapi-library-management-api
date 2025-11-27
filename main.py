@@ -29,9 +29,12 @@ def get_authors(
     return crud.get_all_authors(db, skip, limit)
 
 
-@app.get("/authors/{id}", response_model=AuthorList)
-def get_author(id: int, db: Session = Depends(get_db)):
-    return crud.get_author_by_id(id, db)
+@app.get("/authors/{author_id}/", response_model=AuthorList)
+def get_author(author_id: int, db: Session = Depends(get_db)):
+    existing_author = db.query(Author).filter(Author.id == author_id).first()
+    if not existing_author:
+        raise HTTPException(status_code=404, detail="Author not found")
+    return crud.get_author_by_id(author_id, db)
 
 
 @app.post("/authors", response_model=AuthorList)
@@ -68,6 +71,6 @@ def create_book(
     return crud.create_book_for_author(db, book_data.author_id, book_data)
 
 
-@app.get("/books/{id}", response_model=list[BookList])
-def get_book_author(id: int, db: Session = Depends(get_db)):
-    return crud.get_books_author(db, id)
+@app.get("/books/{book_id}", response_model=list[BookList])
+def get_book_author(book_id: int, db: Session = Depends(get_db)):
+    return crud.get_books_author(db, book_id)
